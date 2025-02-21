@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import "./Navbar.css";
-import "../App.css";
-import logo from "../assets/logo.jpeg"; // Adjust the path if needed
+import { AuthContext } from "./AuthContext"; // Import AuthContext
+import "../styles/navbar.css";
+import logo from "../assets/logo.jpeg";
 
 const NavBar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { isLoggedIn, logout, user } = useContext(AuthContext); // Use context
+
+    const handleLogout = () => {
+        logout(); // Call logout from context
+        setMenuOpen(false); // Close menu
+    };
 
     return (
         <nav className="navbar">
@@ -13,12 +19,10 @@ const NavBar = () => {
                 <img src={logo} alt="Logo" />
             </div>
 
-            {/* Hamburger Button (Only visible on small screens) */}
             <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
                 {menuOpen ? "✖" : "☰"}
             </button>
 
-            {/* Navigation Links (Hidden on small screens by default) */}
             <ul className={`links ${menuOpen ? "open" : ""}`}>
                 <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
                 <li><Link to="/how-it-works" onClick={() => setMenuOpen(false)}>How it works</Link></li>
@@ -26,9 +30,13 @@ const NavBar = () => {
                 <li><Link to="/freelancer" onClick={() => setMenuOpen(false)}>Join as Freelancer</Link></li>
                 <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact Us</Link></li>
                 <li>
-                    <Link to="/LoginOrSignup" onClick={() => setMenuOpen(false)}>
-                        <button>Login/Signup</button>
-                    </Link>
+                    {isLoggedIn ? (
+                        <button onClick={handleLogout}>Logout</button>
+                    ) : (
+                        <Link to="/login" onClick={() => setMenuOpen(false)}>
+                            <button>Login/Signup</button>
+                        </Link>
+                    )}
                 </li>
             </ul>
         </nav>

@@ -5,18 +5,20 @@ const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
 const cors = require('cors');
 
-
-dotenv.config();
+dotenv.config(); // Load .env variables (remove any duplicate calls)
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Verify MONGODB_URI is loaded (for debugging)
+console.log('MONGODB_URI:', process.env.MONGODB_URI);
 
-
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('Failed to connect to MongoDB', err));
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Failed to connect to MongoDB', err));
 
 const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
@@ -154,7 +156,10 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something went wrong!');
 });
 
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
+
+module.exports = app;
