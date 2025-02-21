@@ -1,0 +1,45 @@
+.home {
+  text-align: left;
+  padding: 2rem;
+  color: #fff;
+  /* White text to contrast #root background */
+}
+
+.home h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.home p {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+
+
+
+.home button {
+  width: auto;
+  padding: 0.75rem 1.5rem;
+  background-color: rgb(244, 32, 67);
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.home button:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 48rem) {
+  .home h1 {
+    font-size: 2rem;
+  }
+
+  .home p {
+    font-size: 1rem;
+  }
+}
