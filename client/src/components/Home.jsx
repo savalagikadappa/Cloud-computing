@@ -22,6 +22,7 @@ const Home = () => {
       ) : (
         <>
           <h1>Welcome to SkillFlash</h1>
+          <h2>Get Your Tasks Done Instantly with SkillFlash!</h2>
           <p>Get started by logging in or signing up!</p>
           <button onClick={() => navigate("/login")}>Login/Signup</button>
         </>
