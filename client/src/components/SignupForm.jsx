@@ -12,6 +12,8 @@ const SignupForm = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
 
+  const apiUrl = process.env.REACT_APP_API_URL; // e.g., "https://your-backend-domain.com"
+
   const handleSignup = async (e) => {
     e.preventDefault();
     setError('');
@@ -19,6 +21,7 @@ const SignupForm = () => {
     setLoading(true);
 
     if (!showOtpField) {
+      // Step 1: Request OTP
       if (!email || !password) {
         setError('Please fill in all fields');
         setLoading(false);
@@ -26,7 +29,7 @@ const SignupForm = () => {
       }
 
       try {
-        await axios.post('http://localhost:3000/signup', { email, password });
+        await axios.post(`${apiUrl}/signup`, { email, password });
         setMessage('OTP sent to your email');
         setShowOtpField(true);
         setLoading(false);
@@ -35,6 +38,7 @@ const SignupForm = () => {
         setLoading(false);
       }
     } else {
+      // Step 2: Verify OTP
       if (!otp) {
         setError('Please enter the OTP');
         setLoading(false);
@@ -42,9 +46,10 @@ const SignupForm = () => {
       }
 
       try {
-        const response = await axios.post('http://localhost:3000/verify-otp', { email, otp });
+        const response = await axios.post(`${apiUrl}/verify-otp`, { email, otp });
         const { token } = response.data; // Assuming backend returns { token: "..." }
         login(token, { email }); // Update context and redirect
+        setLoading(false); // Reset loading on success
       } catch (error) {
         setError(error.response?.data?.error || 'OTP verification failed');
         setLoading(false);

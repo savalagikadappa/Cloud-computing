@@ -9,6 +9,8 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
 
+  const apiUrl = process.env.REACT_APP_API_URL; 
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -21,7 +23,7 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/login', {
+      const response = await axios.post(`${apiUrl}/login`, {
         email,
         password,
       }, {
@@ -30,6 +32,7 @@ const LoginForm = () => {
 
       const { token } = response.data; // Assuming backend returns { token: "..." }
       login(token, { email }); // Update context and redirect
+      setLoading(false); // Ensure loading is reset on success
     } catch (error) {
       setError(error.response?.data?.error || 'Login failed');
       setLoading(false);
