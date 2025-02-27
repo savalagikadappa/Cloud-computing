@@ -12,7 +12,7 @@ const SignupForm = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
 
-  const apiUrl = process.env.REACT_APP_API_URL; // e.g., "https://your-backend-domain.com"
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleSignup = async (e) => {
     e.preventDefault();

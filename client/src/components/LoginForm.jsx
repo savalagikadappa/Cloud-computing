@@ -9,8 +9,8 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
 
-  const apiUrl = process.env.REACT_APP_API_URL; 
-
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
