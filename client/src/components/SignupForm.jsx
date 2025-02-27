@@ -29,6 +29,7 @@ const SignupForm = () => {
       }
 
       try {
+        console.log('API URL:', apiUrl)
         await axios.post(`${apiUrl}/signup`, { email, password });
         setMessage('OTP sent to your email');
         setShowOtpField(true);
