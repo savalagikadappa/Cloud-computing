@@ -2,7 +2,6 @@
   text-align: left;
   padding: 2rem;
   color: #fff;
-  /* White text to contrast #root background */
 }
 
 .home h1 {
@@ -10,15 +9,26 @@
   margin-bottom: 1rem;
 }
 
+.home h2 {
+  text-align: center;
+}
+
 .home p {
   font-size: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
+.intro {
+  background-color: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border-radius: 10px;
+}
 
-
-
-.home button {
+#log {
   width: auto;
   padding: 0.75rem 1.5rem;
   background-color: rgb(244, 32, 67);
@@ -27,10 +37,28 @@
   border-radius: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
-.home button:hover {
+#log:hover {
+  opacity: 0.9;
+}
+
+#post,
+#freelance {
+  width: auto;
+  background-color: #4D55CC;
+  padding: 0.75rem 1.5rem;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+#post:hover,
+#freelance:hover {
   opacity: 0.9;
 }
 
@@ -41,5 +69,156 @@
 
   .home p {
     font-size: 1rem;
+  }
+}
+
+.how-it-works {
+  text-align: center;
+  background-color: #111;
+  padding: 50px 0;
+  color: white;
+  border-radius: 10px;
+}
+
+.how-it-works h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.steps {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  flex-wrap: wrap;
+}
+
+.step-card {
+  background-color: #181818;
+  padding: 20px;
+  width: 250px;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.step-card:hover {
+  transform: scale(1.05);
+}
+
+.icon {
+  font-size: 34px;
+  background-color: #0d0d0d;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  color: #00aaff;
+}
+
+.step-card h3 {
+  font-size: 30px;
+  margin-bottom: 8px;
+  color: #00aaff;
+}
+
+.step-card p {
+  font-size: 20px;
+  color: #aaa;
+}
+
+
+.userstatus {
+  text-align: center;
+  padding: 30px;
+  background: rgba(8, 2, 2, 0.25);
+  /* Light transparent white */
+  backdrop-filter: blur(12px);
+  /* Glass effect */
+  border-radius: 12px;
+  box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.2);
+  /* Subtle glow */
+  width: 100%;
+  /* max-width: 100x; Prevents it from becoming too wide */
+  margin: auto;
+  margin-top: 40px;
+  color: #ffffff;
+}
+
+.userstatus h2 {
+  font-size: 58px;
+  font-weight: bold;
+  text-shadow: 2px 2px 10px rgba(0, 200, 255, 0.6);
+  /* Neon text glow */
+}
+
+.userstatus p {
+  font-size: 38px;
+  margin-top: 10px;
+  color: #ddd;
+}
+
+#log {
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 25px;
+  transition: all 0.3s ease-in-out;
+  background: linear-gradient(135deg, #00d4ff, #007bff);
+  /* Neon blue */
+  color: white;
+  box-shadow: 0px 0px 15px rgba(0, 212, 255, 0.6);
+  margin-top: 15px;
+}
+
+#log:hover {
+  transform: scale(1.1);
+  box-shadow: 0px 0px 25px rgba(0, 255, 255, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .userstatus {
+    width: 80%;
+    /* Makes it fit smaller screens */
+    padding: 20px;
+  }
+
+  .userstatus h2 {
+    font-size: 22px;
+    /* Adjusts heading size */
+  }
+
+  .userstatus p {
+    font-size: 16px;
+  }
+
+  #log {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .userstatus {
+    width: 90%;
+    /* Full width for very small screens */
+  }
+
+  .userstatus h2 {
+    font-size: 20px;
+  }
+
+  .userstatus p {
+    font-size: 14px;
+  }
+
+  #log {
+    font-size: 14px;
+    padding: 8px 16px;
   }
 }

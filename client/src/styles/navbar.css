@@ -2,18 +2,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    /* Remove max-width */
     padding: 1rem 2rem;
-    background-color:   rgb(0, 0, 0);
+    background-color: rgb(0, 0, 0);
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
     position: fixed;
-    /* Keep navbar fixed at the top */
-    width: 100%;
     top: 0;
     z-index: 1000;
-    /* Ensure it’s above other content */
     height: 5rem;
-    /* Explicit height for consistency (adjust if needed) */
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+    /* Prevents extra width issues */
+}
+
+html,
+body {
+    overflow-x: hidden;
+    /* Prevents horizontal scrolling */
 }
 
 .navbar.scrolled {
@@ -143,4 +149,3 @@
         display: block;
     }
 }
-

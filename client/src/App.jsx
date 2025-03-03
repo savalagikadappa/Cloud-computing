@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext";
 import NavBar from "./components/Navbar.jsx";
 import LoginOrSignup from "./components/LoginOrSignup.jsx";
-import HowItWorks from "./components/HowItWorks.jsx";
 import PostTask from "./components/PostTask.jsx";
 import Freelancer from "./components/Freelancer.jsx";
 import Contact from "./components/Contact.jsx";
@@ -22,7 +21,6 @@ const App = () => {
           <Route path="/login" element={<LoginOrSignup />} />
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/post-task" element={<PostTask />} />
           <Route path="/freelancer" element={<Freelancer />} />
           <Route path="/contact" element={<Contact />} />
