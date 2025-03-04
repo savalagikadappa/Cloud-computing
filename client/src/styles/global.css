@@ -1,6 +1,7 @@
 /* Set a base font size */
 :root {
     font-size: 16px;
+
 }
 
 /* Reset & Global Styles */
@@ -21,9 +22,12 @@ body,
     padding: 0;
 }
 
+
+
+
 /* #root Background and content layout */
 #root {
-    background-color:#243642;
+    background-image: url("../components/bg.jpg");
     display: flex;
     flex-direction: column;
     /* Stack content vertically */

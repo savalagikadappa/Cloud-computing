@@ -36,61 +36,128 @@
 
 
 .intro {
-  display: flexbox;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  border-radius: 10px;
+  text-align: center;
+  padding: 3rem 2rem;
+  border-radius: 12px;
   background-color: #111;
+  max-width: 800px;
+  margin: auto;
 }
 
+.intro h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.intro h2 {
+  font-size: 1.5rem;
+  color: #ddd;
+  max-width: 600px;
+  margin-bottom: 1.5rem;
+}
+
+/* Buttons Container */
+.buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* General Button Styling */
 .intro button {
   width: 100%;
-  max-width: 300px;
-  /* Adjust as needed */
-  text-align: center;
-  color: black;
-
-}
-
-#post,
-#freelance {
-  padding: 1rem;
+  max-width: 280px;
+  padding: 1rem 1.5rem;
   font-size: 1.2rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+  color: white;
 }
 
+/* Primary Button */
 #post {
-  background-color: #35d0ff;
-  margin-left: 20%;
+  background: linear-gradient(135deg, #35d0ff, #007bff);
+  box-shadow: 0px 5px 15px rgba(53, 208, 255, 0.3);
 }
 
+.intro h2 {
+  margin-bottom: 1.5rem;
+  /* Adjust spacing as needed */
+}
+
+.intro button {
+  margin-top: 1rem;
+  /* Adds space between the text and buttons */
+}
+
+#post:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 10px 20px rgba(53, 208, 255, 0.5);
+}
+
+/* Secondary Button */
 #freelance {
-  background-color: #35d0ff;
-  margin-left: 10%;
+  background: linear-gradient(135deg, #35d0ff, #007bff);
+  box-shadow: 0px 5px 15px rgba(255, 138, 0, 0.3);
 }
 
-.buttons {
-  display: flex;
-  width: 100%;
-  max-width: 600px;
-  gap: 20px;
-  justify-content: center;
+#freelance:hover {
+  transform: translateY(-3px);
+  box-shadow: 0px 10px 20px rgba(255, 138, 0, 0.5);
 }
 
-@media (max-width: 600px) {
-  .buttons {
-    flex-direction: column;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .intro h1 {
+    font-size: 2rem;
   }
 
-  #post,
-  #freelance {
+  .intro h2 {
+    font-size: 1.2rem;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+  }
+
+  .intro button {
     max-width: 100%;
   }
 }
+
+@media (max-width: 480px) {
+  .intro {
+    padding: 2rem 1rem;
+  }
+
+  .intro h1 {
+    font-size: 1.8rem;
+  }
+
+  .intro h2 {
+    font-size: 1.1rem;
+  }
+
+  .intro button {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+}
+
 
 
 #post:hover,

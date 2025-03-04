@@ -15,6 +15,7 @@ const App = () => {
 
   return (
     <AuthProvider>
+
       {!hideNavBarPaths.includes(location.pathname) && <NavBar />}
       <main> {/* Wrap Routes in a main element */}
         <Routes>
