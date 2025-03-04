@@ -15,10 +15,10 @@ app.use(cors());
 console.log('MONGODB_URI:', process.env.MONGODB_URI);
 
 mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 }).then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Failed to connect to MongoDB', err));
+    .catch(err => console.error('Failed to connect to MongoDB', err));
 
 const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
@@ -27,6 +27,8 @@ const UserSchema = new mongoose.Schema({
     otp: { type: String },
     otpExpires: { type: Date },
 });
+
+
 
 const User = mongoose.model('User', UserSchema);
 
@@ -37,6 +39,25 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS,
     },
 });
+
+
+const TaskSchema = new mongoose.Schema({
+    problemTitle: { type: String, required: true },
+    problemDescription: { type: String, required: true },
+    budget: { type: Number, required: true },
+    deadline: { type: Date, required: true },
+})
+
+const Task = mongoose.model('Task', TaskSchema);
+
+app.post('/add-task', async (req, res) => {
+    console.log('Received task:', req.body);
+    const { problemTitle, problemDescription, budget, deadline } = req.body;
+    const task = new Task({ problemTitle, problemDescription, budget, deadline });
+    await task.save();
+    res.status(200).send('Task added successfully');
+});
+
 
 const generateOTP = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -159,7 +180,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
