@@ -4,6 +4,7 @@ import "../styles/PostTask.css";
 
 const PostTask = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
+    console.log('API URL:', import.meta.env.VITE_API_URL);
 
     const [formData, setFormData] = useState({
         problemTitle: '',
@@ -30,11 +31,12 @@ const PostTask = () => {
         setSuccess('');
         try {
             // Make sure the backend endpoint matches what you defined ("/add-task")
-            const response = await axios.post(`${apiUrl}/add-task`, {
-                ...formData,
-                budget: Number(formData.budget),
-                deadline: new Date(formData.deadline)
+            const response = await axios.post(`${apiUrl}/add-task`, formData, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
             });
+            console.log('Response:', response.data);
             setSuccess(response.data);
             setFormData({
                 problemTitle: '',

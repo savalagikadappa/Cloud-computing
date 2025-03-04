@@ -58,6 +58,15 @@ app.post('/add-task', async (req, res) => {
     res.status(200).send('Task added successfully');
 });
 
+app.get('/tasks', async (req, res) => {
+    try {
+        const tasks = await Task.find(); // Fetch all tasks from MongoDB
+        res.status(200).json(tasks);
+    } catch (error) {
+        res.status(500).json({ error: 'Error retrieving tasks' });
+    }
+});
+
 
 const generateOTP = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
