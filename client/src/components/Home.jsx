@@ -28,11 +28,12 @@ const Home = () => {
     else navigate("/login");
   }
   return (
+
     <div className="home">
-      <div className="userstatus">
+      <div className="userstatus fade-in">
         {isLoggedIn ? (
           <>
-            {/* <h1 style={{ textAlign: "center", width: "100%" }}>Welcome, {user?.email || "User"}!</h1> */}
+            <h2 style={{ textAlign: "center", width: "100%" }}>Welcome to SkillFlash</h2>
           </>
         ) : (
           <>
@@ -42,8 +43,11 @@ const Home = () => {
           </>
         )}
       </div>
+
       <br />
-      <div className="intro">  <h1 style={{ textAlign: "center", width: "100%" }}>Get Work Done Instantly</h1>
+
+      <div className="intro fade-in">
+        <h1 style={{ textAlign: "center", width: "100%" }}>Get Work Done Instantly</h1>
         <h2>Post a task, get matched instantly, and receive high-quality work – fast and hassle-free.</h2>
         <br />
         <button id="post" onClick={postTask}>Post a Task now</button>
@@ -51,11 +55,12 @@ const Home = () => {
       </div>
 
       <br />
-      <div className="how-it-works">
+
+      <div className="how-it-works fade-in">
         <h2>How It Works</h2>
         <div className="steps">
           {steps.map((step, index) => (
-            <div className="step-card" key={index}>
+            <div className="step-card fade-in" key={index}>
               <div className="icon">{step.icon}</div>
               <h3>{step.title}</h3>
               <p>{step.desc}</p>
@@ -64,6 +69,8 @@ const Home = () => {
         </div>
       </div>
     </div>
+
+
   );
 };
 
