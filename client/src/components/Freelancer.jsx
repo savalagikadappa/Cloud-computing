@@ -1,6 +1,6 @@
-import React from "react";
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import TaskCard from "./TaskCard";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -21,15 +21,13 @@ const Freelancer = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Task List</h1>
-            <ul>
+        <div className="task-list">
+            <h1>Available Tasks</h1>
+            <div className="task-container">
                 {tasks.map((task, index) => (
-                    <li key={index}>
-                        <strong>{task.problemTitle}</strong> - {task.problemDescription} (Budget: ${task.budget}, Deadline: {new Date(task.deadline).toLocaleDateString()})
-                    </li>
+                    <TaskCard key={index} task={task} />
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };
