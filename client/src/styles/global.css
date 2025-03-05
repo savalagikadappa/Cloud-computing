@@ -24,10 +24,10 @@ body,
 
 
 
-
 /* #root Background and content layout */
 #root {
-    background-image: url("../components/bg.jpg");
+    /* background-image: url("../components/bg.jpg"); */
+    background-color: white;
     display: flex;
     flex-direction: column;
     /* Stack content vertically */

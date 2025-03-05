@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "./AuthContext"; // Import AuthContext
 import "../styles/navbar.css";
 import logo from "../assets/logo.jpeg";
-
+import logo2 from "../assets/image.png"
 const NavBar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const { isLoggedIn, logout, user } = useContext(AuthContext); // Use context
@@ -16,7 +16,7 @@ const NavBar = () => {
     return (
         <nav className="navbar">
             <div className="logo">
-                <img src={logo} alt="Logo" />
+                <img src={logo2} alt="Logo" />
             </div>
 
             <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>

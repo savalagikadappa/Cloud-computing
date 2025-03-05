@@ -236,7 +236,8 @@
 .userstatus {
   text-align: center;
   padding: 30px;
-  background: rgba(8, 2, 2, 0.25);
+  background: black;
+  background-clip: black;
   /* Light transparent white */
   backdrop-filter: blur(12px);
   /* Glass effect */
@@ -325,7 +326,6 @@
     padding: 8px 16px;
   }
 }
-
 
 /* Apply fade-in and slide-up effect */
 .fade-in {
