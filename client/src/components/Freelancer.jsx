@@ -22,7 +22,7 @@ const Freelancer = () => {
 
     return (
         <div className="task-list">
-            <h1>Available Tasks</h1>
+            {/* <h1>Available Tasks</h1> */}
             <div className="task-container">
                 {tasks.map((task, index) => (
                     <TaskCard key={index} task={task} />
