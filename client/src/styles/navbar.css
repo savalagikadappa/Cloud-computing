@@ -5,7 +5,12 @@
     width: 100%;
     /* Remove max-width */
     padding: 1rem 2rem;
-    background-color: rgb(0, 0, 0);
+    /* background-color: rgb(0, 0, 0); */
+    background: linear-gradient(45deg, #0d0d0d, #1a1a2e, #3a0ca3);
+    /* background: linear-gradient(45deg, #2b2d42, #3f37c9, #7209b7); */
+    /* background: linear-gradient(45deg, #20002c, #3a0ca3, #4361ee); */
+    /* background: linear-gradient(45deg, #0a043c, #03506f, #00a6fb); */
+
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
     position: fixed;
     top: 0;

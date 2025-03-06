@@ -1,0 +1,817 @@
+import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AuthProvider } from "./components/AuthContext";
+import NavBar from "./components/Navbar.jsx";
+import LoginOrSignup from "./components/LoginOrSignup.jsx";
+import PostTask from "./components/PostTask.jsx";
+import Freelancer from "./components/Freelancer.jsx";
+import Contact from "./components/Contact.jsx";
+import Home from "./components/Home.jsx";
+import './styles/global.css';
+
+const App = () => {
+  const location = useLocation();
+  const hideNavBarPaths = ["/login"];
+
+  return (
+    <AuthProvider>
+
+      {!hideNavBarPaths.includes(location.pathname) && <NavBar />}
+      <main> {/* Wrap Routes in a main element */}
+        <Routes>
+          <Route path="/login" element={<LoginOrSignup />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/post-task" element={<PostTask />} />
+          <Route path="/freelancer" element={<Freelancer />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </main>
+    </AuthProvider>
+  );
+};
+
+export default App;import React, { useState, useContext } from 'react';
+import axios from 'axios';
+import { AuthContext } from './AuthContext';
+
+const LoginForm = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useContext(AuthContext);
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${apiUrl}/login`, {
+        email,
+        password,
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const { token } = response.data; // Assuming backend returns { token: "..." }
+      login(token, { email }); // Update context and redirect
+      setLoading(false); // Ensure loading is reset on success
+    } catch (error) {
+      setError(error.response?.data?.error || 'Login failed');
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        disabled={loading}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        disabled={loading}
+      />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <button type="submit" disabled={loading}>
+        {loading ? 'Logging in...' : 'Login'}
+      </button>
+    </form>
+  );
+};
+
+export default LoginForm;import React, { useEffect, useState } from "react";
+import axios from "axios";
+import TaskCard from "./TaskCard";
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+const Freelancer = () => {
+    const [tasks, setTasks] = useState([]);
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const response = await axios.get(`${apiUrl}/tasks`);
+                setTasks(response.data);
+            } catch (error) {
+                console.error("Error fetching tasks:", error);
+            }
+        };
+
+        fetchTasks();
+    }, []);
+
+    return (
+        <div className="task-list">
+            <h1>Available Tasks</h1>
+            <div className="task-container">
+                {tasks.map((task, index) => (
+                    <TaskCard key={index} task={task} />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default Freelancer;
+import { useEffect, useRef } from "react";
+
+const Background = () => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const numParticles = 150; // More particles for better effect
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 5 + 1; // Bigger particles for visibility
+        this.speedX = (Math.random() - 0.5) * 3;
+        this.speedY = (Math.random() - 0.5) * 3;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        // Bounce on edges
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.7)"; // White with slight transparency
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < numParticles; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clears canvas
+      particles.forEach((particle) => {
+        particle.update();
+        particle.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    const resizeHandler = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    window.addEventListener("resize", resizeHandler);
+
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1, background: "#000" }}
+    />
+  );
+};
+
+export default Background;
+import React, { useState, useContext } from 'react';
+import axios from 'axios';
+import { AuthContext } from './AuthContext';
+
+const SignupForm = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
+  const [showOtpField, setShowOtpField] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { login } = useContext(AuthContext);
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+    setLoading(true);
+
+    if (!showOtpField) {
+      // Step 1: Request OTP
+      if (!email || !password) {
+        setError('Please fill in all fields');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        console.log('API URL:', apiUrl)
+        await axios.post(`${apiUrl}/signup`, { email, password });
+        setMessage('OTP sent to your email');
+        setShowOtpField(true);
+        setLoading(false);
+      } catch (error) {
+        setError(error.response?.data?.error || 'Signup failed');
+        setLoading(false);
+      }
+    } else {
+      // Step 2: Verify OTP
+      if (!otp) {
+        setError('Please enter the OTP');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.post(`${apiUrl}/verify-otp`, { email, otp });
+        const { token } = response.data; // Assuming backend returns { token: "..." }
+        login(token, { email }); // Update context and redirect
+        setLoading(false); // Reset loading on success
+      } catch (error) {
+        setError(error.response?.data?.error || 'OTP verification failed');
+        setLoading(false);
+      }
+    }
+  };
+
+  return (
+    <form onSubmit={handleSignup} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        disabled={loading || showOtpField}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        disabled={loading || showOtpField}
+      />
+      {showOtpField && (
+        <input
+          type="text"
+          placeholder="Enter OTP"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          disabled={loading}
+        />
+      )}
+      {message && <p style={{ color: 'green' }}>{message}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <button type="submit" disabled={loading}>
+        {loading ? 'Processing...' : showOtpField ? 'Verify OTP' : 'Signup'}
+      </button>
+    </form>
+  );
+};
+
+export default SignupForm;import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "./AuthContext"; // Import AuthContext
+import "../styles/navbar.css";
+import logo from "../assets/logo.jpeg";
+import logo2 from "../assets/image.png"
+const NavBar = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+    const { isLoggedIn, logout, user } = useContext(AuthContext); // Use context
+
+    const handleLogout = () => {
+        logout(); // Call logout from context
+        setMenuOpen(false); // Close menu
+    };
+
+    return (
+        <nav className="navbar">
+            <div className="logo">
+                <img src={logo2} alt="Logo" />
+            </div>
+
+            <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+                {menuOpen ? "✖" : "☰"}
+            </button>
+
+            <ul className={`links ${menuOpen ? "open" : ""}`}>
+                <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
+                <li><Link to="/post-task" onClick={() => setMenuOpen(false)}>Post a Task</Link></li>
+                <li><Link to="/freelancer" onClick={() => setMenuOpen(false)}>Join as Freelancer</Link></li>
+                <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact Us</Link></li>
+                <li>
+                    {isLoggedIn ? (
+                        <button onClick={handleLogout}>Logout</button>
+                    ) : (
+                        <Link to="/login" onClick={() => setMenuOpen(false)}>
+                            <button>Login/Signup</button>
+                        </Link>
+                    )}
+                </li>
+            </ul>
+        </nav>
+    );
+};
+
+export default NavBar;import React, { createContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null); // e.g., email
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setIsLoggedIn(true);
+      // Optionally fetch user data from backend here
+    }
+  }, []);
+
+  const login = (token, userData) => {
+    localStorage.setItem('authToken', token);
+    setIsLoggedIn(true);
+    setUser(userData);
+    navigate('/home');
+  };
+
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    setIsLoggedIn(false);
+    setUser(null);
+    navigate('/');
+  };
+
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};import React from "react";
+import "../styles/TaskCard.css";
+
+const TaskCard = ({ task }) => {
+    return (
+        <div className="task-card">
+            <h2 className="task-title">{task.problemTitle}</h2>
+            <p className="task-desc">{task.problemDescription}</p>
+            <div className="task-details">
+                <span>💰 Budget: <strong>${task.budget}</strong></span>
+                <span>📅 Deadline: <strong>{new Date(task.deadline).toLocaleDateString()}</strong></span>
+            </div>
+            <button className="apply-btn">Apply Now</button>
+        </div>
+    );
+};
+
+export default TaskCard;
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/Contact.css'
+
+const Contact = () => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+    const [submitted, setSubmitted] = useState(false);
+    const socialIconsRef = useRef(null);
+    const formRef = useRef(null);
+    const headerRef = useRef(null);
+
+    useEffect(() => {
+        // Add animation classes after component mounts
+        if (headerRef.current) {
+            headerRef.current.classList.add('appear');
+        }
+
+        if (socialIconsRef.current) {
+            socialIconsRef.current.classList.add('appear');
+        }
+
+        if (formRef.current) {
+            formRef.current.classList.add('appear');
+        }
+    }, []);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Simulate form submission
+        setTimeout(() => {
+            setSubmitted(true);
+            setName('');
+            setEmail('');
+            setMessage('');
+
+            // Reset submission status after showing success message
+            setTimeout(() => {
+                setSubmitted(false);
+            }, 3000);
+        }, 600);
+    };
+
+    return (
+        <div className="contact-container">
+            <div className="contact-content">
+                <div className="contact-header" ref={headerRef}>
+                    <span className="subtitle">Get in Touch</span>
+                    <h1>Contact Us</h1>
+                    <p className="header-description">
+                        We'd love to hear from you. Let us know how we can help with you , feel free to contact us.
+                    </p>
+                </div>
+
+                <div className="contact-sections">
+                    <div className="contact-info">
+                        <div className="social-icons" ref={socialIconsRef}>
+                            <h3>Connect With Us</h3>
+                            <div className="social-links">
+                                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-link">
+                                    <div className="icon linkedin">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                            <rect x="2" y="9" width="4" height="12"></rect>
+                                            <circle cx="4" cy="4" r="2"></circle>
+                                        </svg>
+                                    </div>
+                                    <span>LinkedIn</span>
+                                </a>
+
+                                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-link">
+                                    <div className="icon twitter">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+                                        </svg>
+                                    </div>
+                                    <span>Twitter</span>
+                                </a>
+
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-link">
+                                    <div className="icon instagram">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                        </svg>
+                                    </div>
+                                    <span>Instagram</span>
+                                </a>
+
+                                <a href="mailto:contact@yourcompany.com" className="social-link">
+                                    <div className="icon mail">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                            <polyline points="22,6 12,13 2,6"></polyline>
+                                        </svg>
+                                    </div>
+                                    <span>Email Us</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div className="address-info">
+                            <h3>Visit Our Office</h3>
+                            <p>123 Design Studio Street</p>
+                            <p>Creative District, CA 91234</p>
+                            <p>Mon-Fri: 9:00 AM - 6:00 PM</p>
+                        </div>
+                    </div>
+
+                    <div className="contact-form-container" ref={formRef}>
+                        <div className="form-content">
+                            <h3>Send Us a Message</h3>
+
+                            {submitted ? (
+                                <div className="success-message">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                    </svg>
+                                    <p>Thank you! Your message has been sent successfully.</p>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubmit}>
+                                    <div className="form-group">
+                                        <label htmlFor="name">Name</label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            required
+                                            placeholder="Your name"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="email">Email</label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            required
+                                            placeholder="Your email address"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="message">Message</label>
+                                        <textarea
+                                            id="message"
+                                            value={message}
+                                            onChange={(e) => setMessage(e.target.value)}
+                                            required
+                                            placeholder="How can we help you?"
+                                            rows={6}
+                                        />
+                                    </div>
+
+                                    <button type="submit" className="submit-button">
+                                        <span>Send Message</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                        </svg>
+                                    </button>
+                                </form>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="navigation-link">
+                <Link to="/">Back to Home</Link>
+            </div>
+        </div>
+    );
+};
+
+export default Contact;
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./AuthContext";
+import "../styles/home.css";
+
+const Home = () => {
+  const steps = [
+    { title: "Post Your Task", desc: "Describe your job and set a budget", icon: "➡" },
+    { title: "Instant Match", desc: "SkillFlash assigns the best freelancer", icon: "⭐" },
+    { title: "Work Gets Done", desc: "Freelancer completes and submits the work", icon: "⏳" },
+    { title: "Approve & Pay", desc: "Review, approve, and payment is released", icon: "🛡" }
+  ];
+  const { isLoggedIn, user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  const gotoFreelance = () => {
+    if (isLoggedIn)
+      navigate("/freelancer");
+    else
+      navigate("/login")
+  }
+  const postTask = () => {
+    if (isLoggedIn) navigate("/post-task");
+    else navigate("/login");
+  }
+  return (
+
+    <div className="home">
+      <div className="userstatus fade-in">
+        {isLoggedIn ? (
+          <>
+            <h2 style={{ textAlign: "center", width: "100%" }}>Welcome to SkillFlash</h2>
+          </>
+        ) : (
+          <>
+            <h2 style={{ textAlign: "center", width: "100%" }}>Welcome to SkillFlash</h2>
+            <p>Get started by logging in or signing up!</p>
+            <button id="log" onClick={() => navigate("/login")}>Login/Signup</button>
+          </>
+        )}
+      </div>
+
+      <br />
+
+      <div className="intro fade-in">
+        <h1 style={{ textAlign: "center", width: "100%" }}>Get Work Done Instantly</h1>
+        <h2>Post a task, get matched instantly, and receive high-quality work – fast and hassle-free.</h2>
+        <br />
+        <button id="post" onClick={postTask}>Post a Task now</button>
+        <button id="freelance" onClick={gotoFreelance}>Earn as a freelancer</button>
+      </div>
+
+      <br />
+
+      <div className="how-it-works fade-in">
+        <h2>How It Works</h2>
+        <div className="steps">
+          {steps.map((step, index) => (
+            <div className="step-card fade-in" key={index}>
+              <div className="icon">{step.icon}</div>
+              <h3>{step.title}</h3>
+              <p>{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+
+  );
+};
+
+export default Home;import React, { useState } from 'react';
+import axios from 'axios';
+import "../styles/PostTask.css";
+
+const PostTask = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
+    console.log('API URL:', import.meta.env.VITE_API_URL);
+
+    const [formData, setFormData] = useState({
+        problemTitle: '',
+        problemDescription: '',
+        budget: '',
+        deadline: ''
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        setSuccess('');
+        try {
+            // Make sure the backend endpoint matches what you defined ("/add-task")
+            const response = await axios.post(`${apiUrl}/add-task`, formData, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log('Response:', response.data);
+            setSuccess(response.data);
+            setFormData({
+                problemTitle: '',
+                problemDescription: '',
+                budget: '',
+                deadline: ''
+            });
+        } catch (error) {
+            setError(error.response?.data?.error || 'Error adding task');
+        }
+        setLoading(false);
+    };
+
+    return (
+        <div className="form-container">
+            <h1>Post Task</h1>
+            <p>This is where you can post a new task.</p>
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="problemTitle">Task Title</label>
+                    <input
+                        type="text"
+                        id="problemTitle"
+                        name="problemTitle"
+                        value={formData.problemTitle}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="problemDescription">Description</label>
+                    <textarea
+                        id="problemDescription"
+                        name="problemDescription"
+                        value={formData.problemDescription}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="budget">Budget ($)</label>
+                    <input
+                        type="number"
+                        id="budget"
+                        name="budget"
+                        value={formData.budget}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="deadline">Deadline</label>
+                    <input
+                        type="date"
+                        id="deadline"
+                        name="deadline"
+                        value={formData.deadline}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                {error && <p className="error">{error}</p>}
+                {success && <p className="success">{success}</p>}
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Submitting...' : 'Add Task'}
+                </button>
+            </form>
+        </div>
+    );
+};
+
+export default PostTask;
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import LoginForm from './LoginForm';
+import SignupForm from './SignupForm';
+import { AuthContext } from './AuthContext';
+import '../styles/login.css'; // Assuming this exists
+
+const LoginOrSignup = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const { isLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/home'); // Redirect if already logged in
+    }
+  }, [isLoggedIn, navigate]);
+
+  return (
+    <div className={`container ${isLogin ? 'login-mode' : 'signup-mode'}`}>
+      <div className="button-group" style={{ marginBottom: '20px' }}>
+        <button onClick={() => setIsLogin(true)} disabled={isLogin}>
+          Login
+        </button>
+        <button onClick={() => setIsLogin(false)} disabled={!isLogin}>
+          Signup
+        </button>
+      </div>
+      {isLogin ? <LoginForm /> : <SignupForm />}
+    </div>
+  );
+};
+
+export default LoginOrSignup;import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App.jsx";
+import "./index.css";
+
+createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <StrictMode>
+      <App />
+    </StrictMode>
+  </BrowserRouter>
+);

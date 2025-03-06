@@ -2,6 +2,7 @@
   text-align: left;
   padding: 2rem;
   color: #fff;
+
 }
 
 .home h1 {
@@ -43,7 +44,8 @@
   text-align: center;
   padding: 3rem 2rem;
   border-radius: 12px;
-  background-color: #111;
+  /* background-color: #111; */
+  background: linear-gradient(45deg, #ff7e5f, #feb47b, #2a4365, #4c78a8);
   max-width: 800px;
   margin: auto;
 }
@@ -177,14 +179,15 @@
 
 .how-it-works {
   text-align: center;
-  background-color: #111;
+  /* background-color: #111; */
+  background: linear-gradient(45deg, #ff9a8b, #ff6a88, #4a90e2, #50c9c3);
   padding: 50px 0;
   color: white;
   border-radius: 10px;
 }
 
 .how-it-works h2 {
-  font-size: 24px;
+  font-size: 60px;
   margin-bottom: 20px;
 }
 
