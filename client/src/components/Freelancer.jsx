@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TaskCard from "./TaskCard";
-
-const apiUrl = import.meta.env.VITE_API_URL;
+ const apiUrl = "http://13.127.231.31:3000";
 
 const Freelancer = () => {
     const [tasks, setTasks] = useState([]);
