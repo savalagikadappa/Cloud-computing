@@ -12,7 +12,7 @@ const SignupForm = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useContext(AuthContext);
 
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = "http://13.127.231.31:3000";
 
   const handleSignup = async (e) => {
     e.preventDefault();
