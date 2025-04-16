@@ -2,10 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 const cors = require('cors');
+require('dotenv').config({ path: __dirname + '/../../.env' });
 
-dotenv.config(); // Load .env variables (remove any duplicate calls)
+// dotenv.config(); // Load .env variables (remove any duplicate calls)
 
 const app = express();
 app.use(express.json());
